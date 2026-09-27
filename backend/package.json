@@ -1,0 +1,14 @@
+{
+  "name": "retro-portfolio-backend",
+  "version": "1.0.0",
+  "description": "Blog backend for [Krrish.] retro portfolio",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5"
+  }
+}

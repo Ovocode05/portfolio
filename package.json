@@ -1,0 +1,22 @@
+{
+  "name": "retro-facebook-portfolio",
+  "version": "1.0.0",
+  "description": "2004-2006 Retro Facebook Portfolio & Tech Journal for Krrish Punj (B.E. CS @ Thapar Institute of Eng. & Tech.)",
+  "main": "index.html",
+  "scripts": {
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js",
+    "serve": "node backend/server.js"
+  },
+  "keywords": [
+    "facebook-retro",
+    "the-facebook-2006",
+    "portfolio",
+    "hpc",
+    "pinn",
+    "cuda",
+    "thapar-institute"
+  ],
+  "author": "Krrish Punj <krrish.punj@thapar.edu>",
+  "license": "GPL-3.0"
+}
