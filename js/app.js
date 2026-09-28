@@ -79,21 +79,15 @@ const INITIAL_RESEARCH_DISPATCHES = [
 const INITIAL_SOFTBOARD_NOTES = [
   {
     id: 'note-1790581276778',
-    text: 'Foss: Sympy integration/ solver librabry',
+    text: '* Working on neural operating system',
     pinned: true,
     createdAt: '2026-09-28T07:41:16.778Z'
   },
   {
     id: 'note-1790497548546',
-    text: 'maybe working on neural operating system',
+    text: 'Foss: Sympy integration/ solver librabry',
     pinned: true,
     createdAt: '2026-09-27T08:25:48.546Z'
-  },
-  {
-    id: 'note-3',
-    text: 'Revisit an adaptive scheduling prototype for sparse kernels on hybrid CPU + GPU workloads.',
-    pinned: false,
-    createdAt: '2026-09-24T09:00:00Z'
   }
 ];
 
@@ -702,14 +696,28 @@ const App = {
                 </div>
               </div>
 
+              <!-- Project 2: Neural OS -->
+              <div class="project-card-retro">
+                <div class="project-title-bar">
+                  <span class="project-name">Neural OS</span>
+                </div>
+                <p style="margin-bottom:6px;">
+                  A lightweight, terminal-first operating system for programming, computational workloads, and low-level hardware access. It explores replacing traditional CPU scheduling policies with learned scheduling models, including deep learning and generative diffusion models.                </p>
+                <ul class="bullet-list" style="margin-bottom:6px;">
+                  <li>Inspired by "NeuralOS: Towards Simulating Operating Systems via Neural Generative Models (2025)"</li>
+                  <li>In Progress</li>
+                </ul>
+                <div style="font-size:12px; margin-top:4px;">
+                </div>
+              </div>
+
             </div>
           </div>
 
           <!-- Academic Publications Box -->
           <div class="retro-box">
             <div class="box-header">
-              <span class="box-title">Peer-Reviewed Publications</span>
-              <span class="box-header-links"><a href="#" onclick="App.switchTab('papers'); return false;">Full Citations &gt;</a></span>
+              <span class="box-title">Publications</span>
             </div>
             <div style="padding:10px;">
               <div class="pub-card">
@@ -721,7 +729,7 @@ const App = {
               <div class="pub-card">
                 <div class="pub-title">SAHARA: Articulatory Dynamics-Guided Silent Speech Recognition Using Physics-Informed Neural Networks for Punjabi Vocabulary</div>
                 <div class="pub-meta">
-                  <strong>Authors:</strong> Krrish Punj, Dr. Amrita Kaur &bull; <em>Computer Methods and Programs in Biomedicine</em>, 2026.
+                  <strong>Authors:</strong> Krrish Punj, Dr. Amrita Kaur &bull; <em>Computer Methods and Programs in Biomedicine (communicated)</em>, 2026.
                 </div>
               </div>
             </div>
