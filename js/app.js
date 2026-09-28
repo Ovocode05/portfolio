@@ -333,7 +333,7 @@ const App = {
             <path d="M7 28 C7 20, 25 20, 25 28 Z" fill="#899BC1"/>
           </svg>
         </div>
-        <a href="#" class="fb-logo-text" onclick="App.switchTab('profile'); return false;">[KRRISH.]</a>
+        <a href="#" class="fb-logo-text" onclick="App.switchTab('profile'); return false;">[Krrish.]</a>
       </div>
       <div class="header-right">
         <ul class="top-nav">

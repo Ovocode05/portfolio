@@ -9,7 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
-  --base-font-size: 15px;
+  --base-font-size: 13.5px;
   --fb-dark-blue: #3B5998;
   --fb-med-blue: #6D84B4;
   --fb-light-blue: #D8DFEA;
@@ -1364,13 +1364,26 @@ a:hover {
 
 @media (max-width: 480px) {
   body {
-    font-size: 13px;
+    font-size: 13.5px;
   }
   .header-container {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     height: auto;
     padding: 6px 10px;
-    gap: 4px;
+    gap: 8px;
+  }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+  }
+  .retro-sound-btn {
+    margin-left: auto;
+    flex-shrink: 0;
   }
   .fb-logo-text {
     font-size: 20px;
