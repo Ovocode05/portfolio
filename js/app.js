@@ -10,15 +10,92 @@
  */
 
 // ================= RESEARCH & SCIENCE JOURNAL ENTRIES =================
-// Strictly technical, scientific publications and computational engineering dispatches
+// Fully hardcoded frontend content for a static single-page portfolio.
 
-const INITIAL_JOURNAL_ARTICLES = [];
+const INITIAL_JOURNAL_ARTICLES = [
+  {
+    id: 'post-1790495898010',
+    title: 'hi there',
+    date: 'September 27, 2026',
+    category: 'Personal',
+    readTime: '5 min read',
+    snippet: 'hello world',
+    content: 'hello world',
+    comments: []
+  },
+  {
+    id: 'article-1',
+    title: 'Designing a calmer sparse-matrix runtime for real systems work',
+    date: 'September 26, 2026',
+    category: 'Personal',
+    readTime: '6 min read',
+    snippet: 'A few design lessons from building hardware-aware sparse kernels for irregular graphs and dense scientific workloads.',
+    content: '### Why this matters\n\nThe exciting part of performance engineering is not just raw speed; it is how gracefully a runtime can choose the right execution strategy under changing hardware, cache pressure, and matrix structure.\n\nIn sparse workloads, the bottleneck often shifts between memory movement, indexing overhead, and the cost of choosing the wrong format for the wrong device. That is why the best systems work feels calm: the planner quietly recognizes the shape of the problem before the compute begins.\n\n### What I keep refining\n- Match the sparse format to the matrix structure rather than assuming one runtime fits all.\n- Treat hardware awareness as a scheduling problem, not a one-time optimization.\n- Measure what the system is doing in context, not only in isolation.\n\nThe next chapter is bringing that same discipline to more general scientific tooling, especially where irregular domains and adaptive execution collide.'
+  }
+];
 
 // ================= THE RESEARCH DISPATCH & OPEN PEER CHALKBOARD =================
-// Replaces generic wall with an authentic scientific dispatch board for peer reviews,
-// academic inquiries, paper critiques, and research collaboration proposals.
+// Static local board entries so the frontend works completely without a backend.
 
-const INITIAL_RESEARCH_DISPATCHES = [];
+const INITIAL_RESEARCH_DISPATCHES = [
+  {
+    id: 'dispatch-1790496691798',
+    author: 'Visitor',
+    role: 'Collaborator',
+    tag: 'Collab',
+    time: 'Sep 27, 1:41 PM',
+    avatar: 'assets/profile.jpg',
+    content: 'public dispatch test',
+    unread: true,
+    pinned: false,
+    senderType: 'writer'
+  },
+  {
+    id: 'dispatch-1790496236077',
+    author: 'Tester',
+    role: 'Collaborator',
+    tag: 'General Query',
+    time: 'Sep 27, 1:33 PM',
+    avatar: 'assets/profile.jpg',
+    content: 'hello pin and archive test',
+    unread: true,
+    pinned: false,
+    senderType: 'writer'
+  },
+  {
+    id: 'dispatch-1',
+    author: 'Aisha Noor',
+    role: 'Research Scientist',
+    tag: 'Research Collab',
+    time: 'Sep 26 • 3:42 PM',
+    avatar: 'assets/profile.jpg',
+    content: 'I liked the idea of a hardware-aware sparse runtime design. Would be great to compare notes on matrix reordering strategies and GPU memory layouts for irregular graph workloads.',
+    unread: true,
+    pinned: true,
+    senderType: 'writer'
+  }
+];
+
+const INITIAL_SOFTBOARD_NOTES = [
+  {
+    id: 'note-1790581276778',
+    text: 'Foss: Sympy integration/ solver librabry',
+    pinned: true,
+    createdAt: '2026-09-28T07:41:16.778Z'
+  },
+  {
+    id: 'note-1790497548546',
+    text: 'maybe working on neural operating system',
+    pinned: true,
+    createdAt: '2026-09-27T08:25:48.546Z'
+  },
+  {
+    id: 'note-3',
+    text: 'Revisit an adaptive scheduling prototype for sparse kernels on hybrid CPU + GPU workloads.',
+    pinned: false,
+    createdAt: '2026-09-24T09:00:00Z'
+  }
+];
 
 // ================= RETRO AUDIO & SYNTHESIZER =================
 class RetroSound {
@@ -162,39 +239,30 @@ const App = {
   sound: new RetroSound(),
   activeTab: "profile",
   pokesCount: 42,
-  dispatches: [],
-  softboardNotes: [],
+  dispatches: [...INITIAL_RESEARCH_DISPATCHES],
+  softboardNotes: [...INITIAL_SOFTBOARD_NOTES],
   journalArticles: [...INITIAL_JOURNAL_ARTICLES],
-  postsLoaded: false,
+  postsLoaded: true,
   isAdmin: false,
   ownerCode: "krrish-owner",
   ownerEmail: "krrish.punj@thapar.edu",
   maxDispatchItems: 6,
 
-  async init() {
+  init() {
     this.renderHeader();
     this.renderSidebar();
     this.bindGlobalEvents();
     this.switchTab("profile");
     this.updatePokeBadge();
-    await this.loadPingCount();
-    await this.loadDispatches();
-    await this.loadSoftboardNotes();
-    // Pre-load posts from API in background
-    await this.loadJournalFromAPI();
+    this.loadPingCount();
+    this.loadDispatches();
+    this.loadSoftboardNotes();
+    this.loadJournalFromAPI();
   },
 
-  async loadPingCount() {
-    try {
-      const res = await fetch(`${API_BASE}/api/pings`);
-      if (res.ok) {
-        const data = await res.json();
-        this.pokesCount = Number(data?.count ?? (this.pokesCount || 0));
-        this.updatePokeBadge();
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Ping count unavailable from backend.', e.message);
-    }
+  loadPingCount() {
+    this.pokesCount = 42;
+    this.updatePokeBadge();
   },
 
   persistJournalArticles() {
@@ -205,26 +273,8 @@ const App = {
     // no browser cache fallback; the server is the only source of truth
   },
 
-  async loadJournalFromAPI() {
-    try {
-      const res = await fetch(`${API_BASE}/api/posts`);
-      if (res.ok) {
-        const serverPosts = await res.json();
-        this.journalArticles = Array.isArray(serverPosts) ? [...serverPosts] : [];
-        this.persistJournalArticles();
-        this.postsLoaded = true;
-        this.renderSidebar();
-
-        if (this.activeTab === 'journal') {
-          this.renderJournalView(document.getElementById('content-area'));
-        }
-        return;
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Backend not reachable, using local cached blog data.', e.message);
-    }
-
-    this.loadJournalArticlesFromLocal();
+  loadJournalFromAPI() {
+    this.journalArticles = [...INITIAL_JOURNAL_ARTICLES];
     this.postsLoaded = true;
     this.renderSidebar();
 
@@ -234,35 +284,13 @@ const App = {
   },
 
   updatePokeBadge() {
-    const pokeBtn = document.getElementById("poke-action-btn");
-    if (pokeBtn) {
-      pokeBtn.textContent = `Cite / Ping Krrish (${this.pokesCount})`;
-    }
+    // Poke button removed; keep internal counter but no UI update needed
   },
 
-  async poke() {
-    try {
-      const res = await fetch(`${API_BASE}/api/pings/increment`, { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        this.pokesCount = Number(data?.count ?? this.pokesCount);
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Backend ping counter unavailable; using local counter.', e.message);
-      this.pokesCount += 1;
-    }
-
-    this.sound.playPoke();
+  poke() {
+    // Poke action removed from UI; keep local counter for compatibility.
+    this.pokesCount += 1;
     this.updatePokeBadge();
-
-    const toast = document.getElementById("poke-toast");
-    if (toast) {
-      toast.textContent = `Research ping transmitted! Krrish has received ${this.pokesCount} peer pings on his cluster terminal.`;
-      toast.style.display = "block";
-      setTimeout(() => {
-        toast.style.display = "none";
-      }, 4000);
-    }
   },
 
   switchTab(tabName) {
@@ -311,7 +339,6 @@ const App = {
         <ul class="top-nav">
           <li><a href="#" data-tab="profile" onclick="App.switchTab('profile'); return false;" class="active">home</a></li>
           <li><a href="#" data-tab="journal" onclick="App.switchTab('journal'); return false;">blogs</a></li>
-          <li><a href="#" data-tab="sandbox" onclick="App.switchTab('sandbox'); return false;">terminal</a></li>
           <li><a href="https://www.youtube.com/@fakeheadset" target="_blank" style="color:#FFBABA; font-weight:bold;">youtube ↗</a></li>
           <li><a href="https://github.com/Ovocode05/" target="_blank">github ↗</a></li>
           <li><a href="https://www.linkedin.com/in/krish-punj-a57136379/" target="_blank">linkedin ↗</a></li>
@@ -333,16 +360,8 @@ const App = {
     return this.dispatches.filter(item => item.unread !== false).length;
   },
 
-  async loadDispatches() {
-    try {
-      const res = await fetch(`${API_BASE}/api/dispatches`);
-      if (res.ok) {
-        this.dispatches = await res.json();
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Dispatch feed unavailable from backend.', e.message);
-      this.dispatches = [];
-    }
+  loadDispatches() {
+    this.dispatches = [...INITIAL_RESEARCH_DISPATCHES];
 
     if (this.renderSidebar) this.renderSidebar();
     const container = document.getElementById('dispatch-posts-container');
@@ -351,16 +370,8 @@ const App = {
     }
   },
 
-  async loadSoftboardNotes() {
-    try {
-      const res = await fetch(`${API_BASE}/api/softboard`);
-      if (res.ok) {
-        this.softboardNotes = await res.json();
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Softboard unavailable from backend.', e.message);
-      this.softboardNotes = [];
-    }
+  loadSoftboardNotes() {
+    this.softboardNotes = [...INITIAL_SOFTBOARD_NOTES];
 
     if (document.getElementById('softboard-list')) {
       document.getElementById('softboard-list').innerHTML = this.renderSoftboardHtml();
@@ -475,7 +486,7 @@ const App = {
       </div>
 
       <div class="ad-card">
-        <div class="ad-header-label">HPC Computing Sponsor</div>
+        <div class="ad-header-label">Video Sponsor</div>
         <img src="assets/ad_nvidia.png" alt="NVIDIA CUDA Beta" onclick="App.openAdModal('nvidia')">
         <div class="ad-title">UNLEASH 128 GIGAFLOPS: NVIDIA CUDA BETA</div>
         <div class="ad-desc">Massive parallel computing in your dorm room. Order GeForce from Newegg with student rebate.</div>
@@ -510,7 +521,6 @@ const App = {
 
           <!-- Quick Action Buttons -->
           <div class="action-box">
-            <button class="retro-btn primary" id="poke-action-btn" onclick="App.poke()">Cite / Ping Krrish (${this.pokesCount})</button>
             <button class="retro-btn" onclick="App.openDirectTransmissionModal()">Transmit Collab Request</button>
             <button class="retro-btn" onclick="window.open('https://www.youtube.com/@fakeheadset', '_blank')">Watch Beats on YouTube ↗</button>
             <button class="retro-btn" onclick="App.openResumeModal()">View / Print CV</button>
@@ -526,7 +536,7 @@ const App = {
             </div>
             
             <div style="background:#FAFBFD; padding:8px 10px; border-bottom:1px solid #D8DFEA; font-size:12px; color:#555;">
-              <em>This dispatch inbox is open to everyone visiting the site. Anyone can send a message, while the owner can archive and pin them.</em>
+              <em>Anyone can send a message, while the owner can archive and pin them. (Currently not working)</em>
             </div>
 
             <!-- Composer -->
@@ -896,26 +906,23 @@ const App = {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
   },
 
-  async togglePinDispatch(id) {
+  togglePinDispatch(id) {
     if (!this.requestOwnerAccess('pin a dispatch')) {
       return;
     }
 
-    try {
-      const res = await fetch(`${API_BASE}/api/dispatches/${id}/pin`, {
-        method: 'PATCH',
-        headers: { 'x-admin-secret': this.ownerCode }
-      });
-      if (!res.ok) {
-        throw new Error('Failed to pin dispatch');
-      }
-      await this.loadDispatches();
-    } catch (e) {
-      console.warn('[Krrish.] Could not update dispatch pin state.', e.message);
+    const item = this.dispatches.find(p => String(p.id) === String(id));
+    if (!item) return;
+
+    item.pinned = !item.pinned;
+    this.persistDispatches();
+    const container = document.getElementById('dispatch-posts-container');
+    if (container) {
+      container.innerHTML = this.renderDispatchesHtml();
     }
   },
 
-  async postDispatch() {
+  postDispatch() {
     const authorInput = document.getElementById("dispatch-author-input");
     const tagInput = document.getElementById("dispatch-tag-input");
     const msgInput = document.getElementById("dispatch-message-input");
@@ -925,6 +932,7 @@ const App = {
     }
 
     const payload = {
+      id: Date.now(),
       author: authorInput && authorInput.value.trim() ? authorInput.value.trim() : "Peer Researcher",
       role: "Collaborator",
       tag: tagInput ? tagInput.value : "Research Query",
@@ -936,44 +944,29 @@ const App = {
       senderType: 'writer'
     };
 
-    try {
-      const res = await fetch(`${API_BASE}/api/dispatches`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        throw new Error('Dispatch could not be saved');
-      }
-
-      msgInput.value = "";
-      this.sound.playClick();
-      await this.loadDispatches();
-    } catch (e) {
-      console.warn('[Krrish.] Could not send dispatch.', e.message);
-      alert('The dispatch could not be saved right now.');
+    this.dispatches.unshift(payload);
+    this.dispatches = this.dispatches.slice(0, this.maxDispatchItems * 2);
+    msgInput.value = "";
+    this.sound.playClick();
+    this.persistDispatches();
+    const container = document.getElementById('dispatch-posts-container');
+    if (container) {
+      container.innerHTML = this.renderDispatchesHtml();
     }
   },
 
-  async deleteDispatch(id) {
+  deleteDispatch(id) {
     if (!this.requestOwnerAccess('archive a dispatch')) {
       return;
     }
 
     if (confirm("Archive this research dispatch from the chalkboard?")) {
-      try {
-        const res = await fetch(`${API_BASE}/api/dispatches/${id}`, {
-          method: 'DELETE',
-          headers: { 'x-admin-secret': this.ownerCode }
-        });
-        if (!res.ok) {
-          throw new Error('Dispatch could not be deleted');
-        }
-        await this.loadDispatches();
-        this.renderSidebar();
-      } catch (e) {
-        console.warn('[Krrish.] Could not delete dispatch.', e.message);
+      this.dispatches = this.dispatches.filter(item => String(item.id) !== String(id));
+      this.persistDispatches();
+      this.renderSidebar();
+      const container = document.getElementById('dispatch-posts-container');
+      if (container) {
+        container.innerHTML = this.renderDispatchesHtml();
       }
     }
   },
@@ -1001,21 +994,18 @@ const App = {
     `).join('');
   },
 
-  async toggleSoftboardPin(id) {
+  toggleSoftboardPin(id) {
     if (!this.requestOwnerAccess('pin a softboard note')) return;
-    try {
-      const res = await fetch(`${API_BASE}/api/softboard/${id}/pin`, {
-        method: 'PATCH',
-        headers: { 'x-admin-secret': this.ownerCode }
-      });
-      if (!res.ok) throw new Error('Unable to pin note');
-      await this.loadSoftboardNotes();
-    } catch (e) {
-      console.warn('[Krrish.] Could not update softboard pin state.', e.message);
+    const note = this.softboardNotes.find(item => String(item.id) === String(id));
+    if (!note) return;
+
+    note.pinned = !note.pinned;
+    if (document.getElementById('softboard-list')) {
+      document.getElementById('softboard-list').innerHTML = this.renderSoftboardHtml();
     }
   },
 
-  async saveSoftboardNote() {
+  saveSoftboardNote() {
     if (!this.requestOwnerAccess('write to the softboard')) return;
     const input = document.getElementById('softboard-input');
     if (!input || !input.value.trim()) {
@@ -1023,35 +1013,24 @@ const App = {
       return;
     }
 
-    try {
-      const res = await fetch(`${API_BASE}/api/softboard`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-secret': this.ownerCode
-        },
-        body: JSON.stringify({ text: input.value.trim(), pinned: false })
-      });
+    this.softboardNotes.unshift({
+      id: 'note-' + Date.now(),
+      text: input.value.trim(),
+      pinned: false,
+      createdAt: new Date().toISOString()
+    });
+    input.value = '';
 
-      if (!res.ok) throw new Error('Could not save softboard note');
-      input.value = '';
-      await this.loadSoftboardNotes();
-    } catch (e) {
-      console.warn('[Krrish.] Softboard save failed.', e.message);
+    if (document.getElementById('softboard-list')) {
+      document.getElementById('softboard-list').innerHTML = this.renderSoftboardHtml();
     }
   },
 
-  async deleteSoftboardNote(id) {
+  deleteSoftboardNote(id) {
     if (!this.requestOwnerAccess('delete a softboard note')) return;
-    try {
-      const res = await fetch(`${API_BASE}/api/softboard/${id}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-secret': this.ownerCode }
-      });
-      if (!res.ok) throw new Error('Could not delete note');
-      await this.loadSoftboardNotes();
-    } catch (e) {
-      console.warn('[Krrish.] Softboard delete failed.', e.message);
+    this.softboardNotes = this.softboardNotes.filter(item => String(item.id) !== String(id));
+    if (document.getElementById('softboard-list')) {
+      document.getElementById('softboard-list').innerHTML = this.renderSoftboardHtml();
     }
   },
 
@@ -1154,7 +1133,7 @@ const App = {
     }
   },
 
-  async deleteArticle(articleId) {
+  deleteArticle(articleId) {
     if (!this.isAdmin) return;
 
     const article = this.journalArticles.find(p => p.id === articleId);
@@ -1162,23 +1141,6 @@ const App = {
 
     const confirmed = window.confirm(`Delete blog: "${article.title}"?`);
     if (!confirmed) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/api/posts/${articleId}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-secret': this.ownerCode }
-      });
-
-      if (res.ok) {
-        this.journalArticles = this.journalArticles.filter(p => p.id !== articleId);
-        this.persistJournalArticles();
-        this.renderSidebar();
-        this.renderJournalView(document.getElementById('content-area'));
-        return;
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Delete failed; removing locally.', e.message);
-    }
 
     this.journalArticles = this.journalArticles.filter(p => p.id !== articleId);
     this.persistJournalArticles();
@@ -1224,7 +1186,7 @@ const App = {
     document.body.insertAdjacentHTML("beforeend", modalHtml);
   },
 
-  async saveEditedArticle(articleId) {
+  saveEditedArticle(articleId) {
     if (!this.isAdmin) return;
 
     const titleInput = document.getElementById('edit-article-title-input');
@@ -1240,34 +1202,22 @@ const App = {
     const readTime = readTimeInput ? readTimeInput.value.trim() : '5 min read';
     const content = contentInput.value.trim();
 
-    try {
-      const res = await fetch(`${API_BASE}/api/posts/${articleId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-secret': this.ownerCode
-        },
-        body: JSON.stringify({ title, readTime, content })
-      });
-
-      if (res.ok) {
-        const updatedPost = await res.json();
-        const index = this.journalArticles.findIndex(p => p.id === articleId);
-        if (index !== -1) {
-          this.journalArticles[index] = updatedPost;
-        }
-        this.persistJournalArticles();
-        this.closeModal('edit-article-modal');
-        this.renderSidebar();
-        this.renderJournalView(document.getElementById('content-area'));
-        alert('Blog post updated successfully!');
-        return;
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Update failed.', e.message);
+    const index = this.journalArticles.findIndex(p => p.id === articleId);
+    if (index !== -1) {
+      this.journalArticles[index] = {
+        ...this.journalArticles[index],
+        title,
+        readTime,
+        snippet: content.substring(0, 190) + (content.length > 190 ? '...' : ''),
+        content
+      };
     }
 
-    alert('Unable to update the blog right now.');
+    this.persistJournalArticles();
+    this.closeModal('edit-article-modal');
+    this.renderSidebar();
+    this.renderJournalView(document.getElementById('content-area'));
+    alert('Blog post updated successfully!');
   },
 
   escapeHtml(value) {
@@ -1316,7 +1266,7 @@ const App = {
     document.body.insertAdjacentHTML("beforeend", modalHtml);
   },
 
-  async publishNewArticle() {
+  publishNewArticle() {
     if (!this.isAdmin) {
       this.toggleOwnerAccess();
       return;
@@ -1335,38 +1285,13 @@ const App = {
     const content = contentInput.value.trim();
     const readTime = readTimeInput ? readTimeInput.value : "5 min read";
 
-    try {
-      const res = await fetch(`${API_BASE}/api/posts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-secret': this.ownerCode
-        },
-        body: JSON.stringify({ title, readTime, content })
-      });
-
-      if (res.ok) {
-        const savedPost = await res.json();
-        this.journalArticles.unshift(savedPost);
-        this.persistJournalArticles();
-        this.sound.playPoke();
-        this.closeModal("write-article-modal");
-        this.renderSidebar();
-        this.renderJournalView(document.getElementById("content-area"));
-        alert("Blog post published and saved to the personal archive!");
-        return;
-      }
-    } catch (e) {
-      console.warn('[Krrish.] Backend unreachable; using cached journal history.', e.message);
-    }
-
     const newArticle = {
       id: "paper-" + Date.now(),
       title,
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       category: 'Personal',
       readTime,
-      snippet: content.substring(0, 190) + "...",
+      snippet: content.substring(0, 190) + (content.length > 190 ? '...' : ''),
       content
     };
 
@@ -1376,7 +1301,7 @@ const App = {
     this.closeModal("write-article-modal");
     this.renderSidebar();
     this.renderJournalView(document.getElementById("content-area"));
-    alert("Blog saved to your browser cache while the backend reconnects.");
+    alert("Blog saved locally in the frontend archive.");
   },
 
   // ================= VIEW: COMPUTE SANDBOX (REIMAGINED TERMINAL) =================

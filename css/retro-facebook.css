@@ -9,6 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
+  --base-font-size: 15px;
   --fb-dark-blue: #3B5998;
   --fb-med-blue: #6D84B4;
   --fb-light-blue: #D8DFEA;
@@ -49,11 +50,12 @@ strong,
 small,
 code {
   font-family: var(--fb-font-stack);
+  font-size: var(--base-font-size);
 }
 
 body {
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: var(--base-font-size);
+  line-height: 1.55;
   color: var(--fb-text-dark);
   background-color: #ECEFF5;
   background-image: linear-gradient(to bottom, #3B5998 0px, #3B5998 52px, #ECEFF5 52px);
