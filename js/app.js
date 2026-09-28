@@ -835,12 +835,10 @@ const App = {
 
     if (isPlaying) {
       if (btn) btn.textContent = "⏸ PAUSE";
-      if (status) status.textContent = "[ PLAYING LO-FI CHORDS ]";
-      if (track) track.textContent = "♫ Late Night CUDA Loops (Prod. Krrish)";
+      if (track) track.textContent = "♫ Hands over Bruise (Trenet Razor)";
     } else {
       if (btn) btn.textContent = "▶ PLAY";
-      if (status) status.textContent = "[ STOPPED ]";
-      if (track) track.textContent = "► Late Night CUDA Loops (Prod. Krrish)";
+      if (track) track.textContent = "► Hands over Bruise (Trenet Razor)";
     }
   },
 
